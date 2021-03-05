@@ -1,4 +1,4 @@
-package sugarcane.daily293120;
+package sugarcane.daily293121jan;
 
 public class NumberOfCornerRectangles {
 
