@@ -28,6 +28,6 @@ public class Cane41 {
 
   public static void main(String[] args) {
       Cane41 cane41 = new Cane41();
-      cane41.firstMissingPositive(new int[]{3,4,-1,1});
+      cane41.firstMissingPositive(new int[]{1,2,0});
   }
 }
