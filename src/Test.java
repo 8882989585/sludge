@@ -1,62 +1,145 @@
-// Dynamic Programming Java implementation of Matrix
-// Chain Multiplication.
-// See the Cormen book for details of the following
-// algorithm
-class Test
-{
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
-  // Matrix Ai has dimension p[i-1] x p[i] for i = 1..n
-  static int MatrixChainOrder(int p[], int n)
-  {
-		/* For simplicity of the
-		program, one extra row and
-		one extra column are allocated in m[][]. 0th row
-		and 0th column of m[][] are not used */
-    int m[][] = new int[n][n];
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
-    int i, j, k, L, q;
+class Test {
 
-		/* m[i, j] = Minimum number of scalar
-		multiplications needed to compute the matrix
-		A[i]A[i+1]...A[j] = A[i..j] where
-		dimension of A[i] is p[i-1] x p[i] */
+  /*
+   * Complete the 'getTotalGoals' function below.
+   *
+   * The function is expected to return an INTEGER.
+   * The function accepts following parameters:
+   *  1. STRING team
+   *  2. INTEGER year
+   */
 
-    // cost is zero when multiplying one matrix.
-    for (i = 1; i < n; i++)
-      m[i][i] = 0;
-
-    // L is chain length.
-    for (L = 2; L < n; L++)
-    {
-      for (i = 1; i < n - L + 1; i++)
-      {
-        j = i + L - 1;
-        if (j == n)
-          continue;
-        m[i][j] = Integer.MAX_VALUE;
-        for (k = i; k <= j - 1; k++)
-        {
-          // q = cost/scalar multiplications
-          q = m[i][k] + m[k + 1][j]
-                  + p[i - 1] * p[k] * p[j];
-          if (q < m[i][j])
-            m[i][j] = q;
+  public static int getTotalGoals(String team, int year) {
+    int totalGoals = 0;
+    try {
+      URL url =
+          new URL(
+              "https://jsonmock.hackerrank.com/api/football_matches?year="
+                  + year
+                  + "&team1="
+                  + team
+                  + "&page="
+                  + 1);
+      HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestProperty("accept", "application/json");
+      connection.setRequestMethod("GET");
+      BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      StringBuilder sb = new StringBuilder();
+      String inputLine;
+      while ((inputLine = br.readLine()) != null) {
+        sb.append(inputLine);
+      }
+      br.close();
+      connection.disconnect();
+      JSONParser parser = new JSONParser();
+      JSONObject jsonObject = (JSONObject) parser.parse(sb.toString());
+      Long totalPages = (Long) jsonObject.get("total_pages");
+      long counter = 2L;
+      if (totalPages != 0) {
+        JSONArray arr = (JSONArray) jsonObject.get("data");
+        for (JSONObject object : (Iterable<JSONObject>) arr) {
+          totalGoals += Integer.parseInt((String) object.get("team1goals"));
         }
       }
-    }
+      while (counter <= totalPages) {
+        url =
+            new URL(
+                "https://jsonmock.hackerrank.com/api/football_matches?year="
+                    + year
+                    + "&team1="
+                    + team
+                    + "&page="
+                    + counter);
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestProperty("accept", "application/json");
+        connection.setRequestMethod("GET");
+        br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        sb = new StringBuilder();
+        inputLine = null;
+        while ((inputLine = br.readLine()) != null) {
+          sb.append(inputLine);
+        }
+        br.close();
+        connection.disconnect();
+        jsonObject = (JSONObject) parser.parse(sb.toString());
+        JSONArray arr = (JSONArray) jsonObject.get("data");
+        for (JSONObject object : (Iterable<JSONObject>) arr) {
+          totalGoals += Integer.parseInt((String) object.get("team1goals"));
+        }
+        counter++;
+      }
+      url =
+          new URL(
+              "https://jsonmock.hackerrank.com/api/football_matches?year="
+                  + year
+                  + "&team2="
+                  + team
+                  + "&page="
+                  + 1);
+      connection = (HttpURLConnection) url.openConnection();
+      connection.setRequestProperty("accept", "application/json");
+      connection.setRequestMethod("GET");
+      br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+      sb = new StringBuilder();
+      inputLine = null;
+      while ((inputLine = br.readLine()) != null) {
+        sb.append(inputLine);
+      }
+      br.close();
+      connection.disconnect();
+      jsonObject = (JSONObject) parser.parse(sb.toString());
+      totalPages = (Long) jsonObject.get("total_pages");
+      counter = 2L;
+      if (totalPages != 0) {
+        JSONArray arr = (JSONArray) jsonObject.get("data");
+        for (JSONObject object : (Iterable<JSONObject>) arr) {
+          totalGoals += Integer.parseInt((String) object.get("team2goals"));
+        }
+      }
+      while (counter <= totalPages) {
+        url =
+            new URL(
+                "https://jsonmock.hackerrank.com/api/football_matches?year="
+                    + year
+                    + "&team2="
+                    + team
+                    + "&page="
+                    + counter);
+        connection = (HttpURLConnection) url.openConnection();
+        connection.setRequestProperty("accept", "application/json");
+        connection.setRequestMethod("GET");
+        br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+        sb = new StringBuilder();
+        inputLine = null;
+        while ((inputLine = br.readLine()) != null) {
+          sb.append(inputLine);
+        }
+        br.close();
+        connection.disconnect();
+        jsonObject = (JSONObject) parser.parse(sb.toString());
+        JSONArray arr = (JSONArray) jsonObject.get("data");
+        for (JSONObject object : (Iterable<JSONObject>) arr) {
+          totalGoals += Integer.parseInt((String) object.get("team2goals"));
+        }
+        counter++;
+      }
+    } catch (Exception exp) {
 
-    return m[1][n - 1];
+    }
+    return totalGoals;
   }
 
-  // Driver code
-  public static void main(String args[])
-  {
-    int arr[] = new int[] { 1, 2, 3, 4 };
-    int size = arr.length;
-
-    System.out.println(
-            "Minimum number of multiplications is "
-                    + MatrixChainOrder(arr, size));
+  public static void main(String[] args) {
+    //    System.out.println(Result.getTotalGoals("Chelsea", 2014));
+    System.out.println(Test.getTotalGoals("Barcelona", 2011));
   }
 }
-/* This code is contributed by Rajat Mishra*/

@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 /** delegates break the fluent builder pattern need to make the class outside the parent class. static can't do it.
  *
  */
-public class DelegateDecoratorPattern {
+public class DelegateDecoratorDesignPattern {
 
   static class StringEnhancer {
     private String s;
