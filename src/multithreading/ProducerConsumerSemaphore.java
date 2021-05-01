@@ -28,7 +28,7 @@ public class ProducerConsumerSemaphore {
         if (capacity > 0) {
           semaphore.acquire();
           capacity--;
-          System.out.println(++count);
+          System.out.println("produced --> " + ++count);
           semaphore.release();
         }
       } catch (InterruptedException e) {
@@ -42,7 +42,7 @@ public class ProducerConsumerSemaphore {
         if (capacity < 10) {
           semaphore.acquire();
           capacity++;
-          System.out.println(count);
+          System.out.println("consumed --> " + count--);
           semaphore.release();
         }
       } catch (InterruptedException e) {
@@ -64,7 +64,7 @@ public class ProducerConsumerSemaphore {
       while (true) {
         items.produce();
         try {
-          Thread.sleep(1000);
+          Thread.sleep((long) (Math.random() * (2000)));
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
@@ -85,7 +85,7 @@ public class ProducerConsumerSemaphore {
       while (true) {
         items.consume();
         try {
-          Thread.sleep(1000);
+          Thread.sleep((long) (Math.random() * (2000)));
         } catch (InterruptedException e) {
           e.printStackTrace();
         }

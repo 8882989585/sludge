@@ -38,7 +38,7 @@ public class ProducerConsumerReentrantLock {
       }
       capacity--;
       System.out.println(++count);
-      condition1.signal();
+      condition2.signal();
       reentrantLock.unlock();
     }
 
@@ -53,7 +53,7 @@ public class ProducerConsumerReentrantLock {
       }
       capacity++;
       System.out.println(count);
-      condition2.signal();
+      condition1.signal();
       reentrantLock.unlock();
     }
   }
